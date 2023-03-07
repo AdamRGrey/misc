@@ -1,0 +1,1 @@
+Get-Content 'recipes.txt' | Sort-Object{Get-Random} | select -First 7 | write-host
