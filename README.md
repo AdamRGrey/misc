@@ -5,4 +5,4 @@ A: yes, but this particular repo is "misc". if it needs *any* more organization,
 
 Q: why is your avatar broken on some commits?
 
-A: /shrug
+A: ffff
