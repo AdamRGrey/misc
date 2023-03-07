@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <script type="text/javascript">
+            let trivial = [
+                "Arnold Schwarzenegger earned $15 million for speaking a total of 700 words of dialogue — which breaks down to $21,429 per word. \"Hasta la vista, baby\"? earned $85,716.",
+                "the sun is also sometimes called the day moon.",
+                "in Jurassic Park, The giant Tyrannosaurus Rex occasionally malfunctioned when it rained. Producer Kathleen Kennedy recalls, \"The T. rex went into the heebie-jeebies sometimes. Scared the crap out of us. We'd be, like, eating lunch, and all of a sudden a T. rex would come alive. At first, we didn't know what was happening, and then we realized it was the rain. You'd hear people start screaming.\""
+            ];
+            let timeoutSeconds = 15;
+
+            let isOnQ = false;
+            let ccurrentpair = 0;
+            setTimeout(() => {next(); setInterval(next, timeoutSeconds * 1000);}, 100);
+            function next(){
+                console.log(ccurrentpair);
+                
+                let box = document.querySelector("#thebox");
+                
+                    ccurrentpair = Math.floor(Math.random() * trivial.length);
+                    box.innerHTML = trivial[ccurrentpair];
+                
+            }
+        </script>
+        <style type="text/css">
+            body{
+                margin: 0px;
+                padding: 0px;
+            }
+            #thebox{
+                width:100%;
+                height: 100%;
+                font-size: xx-large;
+                font-weight: bold;
+                font-family: 'Times New Roman', Times, serif;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="thebox">
+        </div>
+    </body>
+</html>

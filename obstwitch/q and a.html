@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <script type="text/javascript">
+            let trivial = [
+                {q:"are mechanical keyboards the best?", a:"yes"},
+                {q:"should adam not type on his mechanical keyboard while the microphone is like 6cm away?", a:"yessiree"}
+            ];
+            let timeoutSeconds = 6;
+
+            let questionBox = null;
+            let answerBox = null;
+            let isOnQ = false;
+            let ccurrentpair = 0;
+            setTimeout(initial, 100);
+            
+            function initial(){
+                questionBox = document.querySelector("#question");
+                answerBox = document.querySelector("#answer");
+                next();
+                setInterval(next, timeoutSeconds * 1000);
+            }
+            function next(){
+                
+                if(!isOnQ){
+                    isOnQ = true;
+                    ccurrentpair = Math.floor(Math.random() * trivial.length);
+                    console.log(trivial[ccurrentpair]);
+                    questionBox.className = "hidden";
+                    answerBox.className = "hidden";
+                    questionBox.innerHTML = trivial[ccurrentpair].q;
+                    answerBox.innerHTML = trivial[ccurrentpair].a;
+                    setTimeout(() => {questionBox.className="display-normal";}, 100);
+                }
+                else{
+                    isOnQ = false;
+                    answerBox.className = "display-normal";
+                }
+            }
+        </script>
+        <style type="text/css">
+            body{
+                margin: 0px;
+                padding: 0px;
+            }
+            #prompt{
+                width:100%;
+                height: 100%;
+                font-size: xx-large;
+                font-weight: bold;
+                text-align: center;
+                font-family: 'Times New Roman', Times, serif;
+            }
+            .hidden{
+                display:none;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div id="prompt">
+            <div id="question" class="hidden"></div>
+            <div id="answer" class="hidden"></div>
+        </div>
+    </body>
+</html>
