@@ -8,7 +8,7 @@ url         = ""
 body 		= ""
 
 # ------------------------------------------------------------
-# obs only accepts a specific, long-dead version of python, for some gd reason. pretty sure it's 3.4? https://www.python.org/downloads/release/python-3410/
+# obs only accepts a specific, long-dead version of python, for some gd reason. at time of writing, 3.6 https://www.python.org/downloads/release/python-3615/
 
 
 def call_hook():
