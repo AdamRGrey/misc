@@ -13,6 +13,11 @@ do
     ffmpeg -i "$file" "$file.mp4"    
     #rm "$file"
 done
+for file in *.mkv
+do
+    ffmpeg -i "$file" "$file.mp4"    
+    #rm "$file"
+done
 
 if [ $(wc -l < "$@") -eq $(wc -l < done.txt) ]
 then
