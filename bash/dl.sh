@@ -2,7 +2,7 @@
 
 starttime=$(date)
 yt-dlp --output "%(upload_date)s - %(title)s - [%(id)s].%(ext)s" \
-    --format "bv*[ext=mp4]+ba/best" \
+    --format "[ext=mp4]+ba/best" \
     --sponsorblock-remove all \
     -a "$@" \
     --download-archive "done.txt"
