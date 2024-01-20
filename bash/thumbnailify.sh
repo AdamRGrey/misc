@@ -1,7 +1,11 @@
 #!/bin/bash
 
+
+# NO SPACES, it's haaaard T_T
+
 if [ ! -f "$@" ]; then
 	echo "file to thumbnailify plz"
+	return
 fi
 
 fullfilename=$(basename -- "$@")
@@ -23,7 +27,7 @@ fi
 echo "file testframe.mp4" > thumbnailism.txt
 echo "file $fullfilename" >> thumbnailism.txt
 
-ffmpeg -i "$fullfilename" -ss 1.5 -to 1.51666 testframe.mp4
+ffmpeg -i "$fullfilename" -ss 3 -t 0.01666 testframe.mp4
 ffmpeg -f concat -i thumbnailism.txt -c copy output.mp4
 
 mv "$fullfilename" "$filename""_thumbless.$extension"
