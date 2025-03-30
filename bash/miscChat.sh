@@ -1,8 +1,7 @@
 #!/bin/bash
 
-#msg="\"{\\\"content\\\":\\\"$@\\\"}\""
-msg="{\"content\":\"$@\"}"
-echo $msg
+msgString=$@
 
-curl -H "Content-Type: application/json" -d "$msg" \
+curl -XPOST \
+    -d "$(jq -cn  --arg msgtype 'm.text' --arg body "$msgString" '{msg: $ARGS.named}' | jq -s add | jq .msg)" \
 	#WEBHOOK URL
