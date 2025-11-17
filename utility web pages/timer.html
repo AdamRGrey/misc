@@ -1,0 +1,226 @@
+<!DOCTYPE>
+<html>
+<head>
+    <style type="text/css">
+        body{
+            background-color:#232323;
+            color:lightgray;
+        }
+        .page{
+            display: grid;
+            padding: 0;
+            margin: 0;
+            grid-template-columns: 1fr 1fr;
+        }
+        .panel{
+            align: center;
+        }
+        .config-panel{
+            display: grid;
+            grid-template-columns: 1fr 4fr;
+        }
+        th{
+            text-align:right;
+        }
+        .gobutton{
+            width:100%;
+            font-size: 2em;
+        }
+        .errorline
+        {
+            color:red;
+            font-weight: bold;
+        }
+        #styling{
+            width:100%;
+        }
+        #timeroutput{
+            font: 2rem "Fira Sans",  sans-serif;
+        }
+        .hidden{
+            display:none;
+        }
+        #dropZone{
+            margin:3px;
+            background-color: #282828;
+        }
+    </style>
+    <script type="text/javascript">
+    let hzInterval = -1;
+    let remainingDuration;
+    let finishTime;
+    let displayUnits=["hours", "minutes", "seconds"];
+    function okgo(){
+        //parse
+        let totalDuration;
+        timeinputerror.classList.add("hidden");
+        try
+        {
+            totalDuration = Temporal.Duration.from("PT" + timeinput.value);
+        }
+        catch (e)
+        {
+            console.error(e);
+            timeinputerror.classList.remove("hidden");
+            return;
+        }
+        displayUnits=[];
+        if(Temporal.Duration.compare(totalDuration, Temporal.Duration.from("PT1H")) > -1)
+        {
+            displayUnits.push("hours");
+        }
+        if(Temporal.Duration.compare(totalDuration, Temporal.Duration.from("PT1M")) > -1)
+        {
+            displayUnits.push("minutes");
+        }
+        if(Temporal.Duration.compare(totalDuration, Temporal.Duration.from("PT1S")) > -1)
+        {
+            displayUnits.push("seconds");
+        }
+
+        timeroutput.style = styling.value;
+
+        finishTime = Temporal.Now.instant().add(totalDuration);
+        if(hzInterval > -1)
+            clearInterval(hzInterval);
+
+        hzInterval = setInterval(hz, 1000);
+        hz();
+    }
+    function hz(){
+        //console.log("lub-dub");
+        remainingDuration = Temporal.Now.instant().until(finishTime).round({largestUnit: displayUnits[0], smallestUnit: displayUnits[displayUnits.length-1]});
+        if(remainingDuration.total("seconds") < 0)
+        {
+            console.log("done!");
+            finish();
+            return;
+        }
+        else
+        {
+            let first=true;
+            let outputStr = "";
+            for (const u of displayUnits)
+            {
+                if(!first)
+                    outputStr += ":";
+                else
+                    first = false;
+
+                if(remainingDuration[u] < 10)
+                    outputStr += "0";
+                outputStr += remainingDuration[u];
+            }
+            timeroutput.innerText = outputStr;
+        }
+    }
+    function finish(){
+        finishSound.play();
+        clearInterval(hzInterval);
+        hzInterval = -1;
+
+        timeroutput.innerText = "time's up!";
+    }
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div class="panel">
+            <div id="timeroutput">05:00</div>
+        </div>
+        <div class="panel">
+            <table>
+                <tbody>
+                    <tr>
+                        <th>styling</th>
+                        <td>
+                 <textarea id="styling">font:
+  2rem "Fira Sans",
+  sans-serif;                </textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">finish sound</th>
+                        <td>
+                            <div id="dropZone">
+                            drop sound file here
+                            <input type="file" id="finishsoundfileinput" multiple accept="audio/*" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <audio id="finishSound" controls>
+                                <source src="secret-area.wav">
+                            </audio>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>time</th>
+                        <td><input type="text" id="timeinput" value="5m0s" /></td>
+                    </tr>
+                    <tr class="errorline hidden" id="timeinputerror">
+                        <td colspan="2">no. 1 hour 12 minutes 3 seconds would be "1h12m3s". (it's an iso8601 duration string, except i'm throwing "PT" in front for you. Blame javascript as a langauge and ecosystem.)
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button class="gobutton" type="button" onclick="okgo()">go</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+    function getGET(paramName){
+        let a = new RegExp(paramName+"=([^&#=]*)");
+        let match = a.exec(window.location.search);
+        if(match === null)
+            return null;
+        console.log("found a value for " + paramName + "; " + match[1]);
+        return decodeURIComponent(match[1]);
+    }
+    function dropHandler(ev){
+         console.log("Drop handler");
+         ev.preventDefault();
+         const files = [...ev.dataTransfer.items]
+             .map((item) => item.getAsFile())
+             .filter((file) => file);
+         console.log(files);
+         finishSound.querySelector("source").src=files[0].name;
+         finishSound.load();
+    }
+    window.onload = () => {
+         let onloadTime = getGET("time");
+         if(onloadTime !== null){
+            timeinput.value = onloadTime;
+            finishTime = Temporal.Now.instant().add(Temporal.Duration.from("PT" + timeinput.value));
+            hz();
+         }
+
+        let onloadFile = getGET("audio");
+         if(onloadFile !== null){
+         finishSound.querySelector("source").src=onloadFile ;
+         finishSound.load();
+        }
+        let onloadStyle = getGET("style");
+         if(onloadStyle !== null){
+             styling.value = onloadStyle;
+            timeroutput.style = styling.value;
+         }
+
+        dropZone.addEventListener("drop", dropHandler);
+
+        finishsoundfileinput.addEventListener("change", () => {
+            if (finishsoundfileinput.files.length === 1) {
+                finishSound.querySelector("source").src=finishsoundfileinput.files[0].name;
+                finishSound.load();
+            }
+        });
+     }
+    </script>
+</body>
+
+</html>
