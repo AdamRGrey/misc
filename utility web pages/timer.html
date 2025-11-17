@@ -183,33 +183,33 @@
         return decodeURIComponent(match[1]);
     }
     function dropHandler(ev){
-         console.log("Drop handler");
-         ev.preventDefault();
-         const files = [...ev.dataTransfer.items]
-             .map((item) => item.getAsFile())
-             .filter((file) => file);
-         console.log(files);
-         finishSound.querySelector("source").src=files[0].name;
-         finishSound.load();
+        console.log("Drop handler");
+        ev.preventDefault();
+        const files = [...ev.dataTransfer.items]
+            .map((item) => item.getAsFile())
+            .filter((file) => file);
+        console.log(files);
+        finishSound.querySelector("source").src=files[0].name;
+        finishSound.load();
     }
     window.onload = () => {
-         let onloadTime = getGET("time");
-         if(onloadTime !== null){
+        let onloadTime = getGET("time");
+        if(onloadTime !== null){
             timeinput.value = onloadTime;
             finishTime = Temporal.Now.instant().add(Temporal.Duration.from("PT" + timeinput.value));
             hz();
-         }
+        }
 
         let onloadFile = getGET("audio");
-         if(onloadFile !== null){
-         finishSound.querySelector("source").src=onloadFile ;
-         finishSound.load();
+        if(onloadFile !== null){
+            finishSound.querySelector("source").src=onloadFile ;
+            finishSound.load();
         }
         let onloadStyle = getGET("style");
-         if(onloadStyle !== null){
-             styling.value = onloadStyle;
+        if(onloadStyle !== null){
+            styling.value = onloadStyle;
             timeroutput.style = styling.value;
-         }
+        }
 
         dropZone.addEventListener("drop", dropHandler);
 
@@ -219,7 +219,7 @@
                 finishSound.load();
             }
         });
-     }
+    }
     </script>
 </body>
 
