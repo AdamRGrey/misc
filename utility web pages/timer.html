@@ -168,11 +168,6 @@ default finish sound is secret-area.wav
                     <tr class="errorline hidden" id="timeinputerror">
                         <td colspan="2">no. 1 hour 12 minutes 3 seconds would be "1h12m3s". (it's an iso8601 duration string, except i'm throwing "PT" in front for you. Blame javascript as a langauge and ecosystem.)
                     </tr>
-                    <tr>
-                        <td colspan="2">
-                            <button class="gobutton" type="button" onclick="okgo()">go</button>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
             </div>
@@ -203,7 +198,6 @@ default finish sound is secret-area.wav
         if(onloadTime !== null){
             timeinput.value = onloadTime;
             finishTime = Temporal.Now.instant().add(Temporal.Duration.from("PT" + timeinput.value));
-            hz();
         }
 
         let onloadFile = getGET("audio");
@@ -225,6 +219,7 @@ default finish sound is secret-area.wav
                 finishSound.load();
             }
         });
+        okgo();
     }
     </script>
 </body>
