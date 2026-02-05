@@ -8,12 +8,15 @@ if [ ! -d "screenshots" ]; then
   mkdir screenshots
 fi
 
-find . -iname "*.mp4" -print0 | while read -d $'\0' file
+files=$(find . -iname "*.mp4")
+for file in $files
 do
 	filename=$(basename -- "$file")
 	#extension="${filename##*.}"
 	filename="${filename%.*}"
-	ffmpeg -ss 0 -i $file -vf fps=0.5 ./screenshots/$filename-%d.png
+	echo "screenshitting $filename"
+	ffmpeg -ss 0.25 -i $file -vf fps=0.5 ./screenshots/$filename-%d.png
+	sleep 1
 done
 
 echo "#"
@@ -85,7 +88,7 @@ do
 		echo "$filename was OCR'd well; $goodreads good so far"
 		exiftool -overwrite_original -gpslatitude="$n" -gpslongitude="-$w" -GPSLatitudeRef="North" -GPSLongitudeRef="West" "tagged/$filename.jpg"
 	else
-		badreads=$(($badreads+1))
+		export badreads=$(($badreads+1))
 		echo "$filename is not perfect; $badreads bad so far"
 		mv "tagged/$filename.jpg" "badread/$filename.jpg"
 		mv "ocr/$filename.txt" "badread/$filename.txt"
