@@ -1,0 +1,80 @@
+https://www.meadmaderight.com/tosna-calculator
+
+#+NAME: input-data
+| starting gravity        | 1.100 |         |
+| batch size              |     5 | gallons |
+| sg from nonfermentables | 1.000 |         |
+| yeast nutrient req      |   0.9 |         |
+
+#+begin_src C :exports results :includes (list "<stdio.h>" "<stdlib.h>") :var tab=input-data
+char *err_ptr;
+double yeastRequirement = strtod(tab[3][1], &err_ptr); //a.k.a., M
+if (*err_ptr != '\0')
+    puts("`tab[3][1]' is not a full number!");
+double sg = strtod(tab[0][1], &err_ptr); //a.k.a., H
+if (*err_ptr != '\0')
+    puts("`tab[0][1]' is not a full number!");
+double sugarBreak = (sg - 1.0) / 3.0 + 1.0;
+double batchSize = strtod(tab[1][1], &err_ptr); //a.k.a., B
+if (*err_ptr != '\0')
+    puts("`tab[1][1]' is not a full number!");
+double brix = ((182.4601 * sg - 775.6821) * sg + 1262.7794) * sg - 669.5622; //a.k.a., R18
+double digestionRequirement = brix * 10.0 * yeastRequirement / 50 * batchSize;
+double L = strtod(tab[2][1], &err_ptr);
+if (*err_ptr != '\0')
+    puts("`tab[1][2]' is not a full number!");
+double fruitGrav = (100.0 / (sg * 1000 - 1000)) * ( L * 1000 - 1000); //a.k.a., R19
+
+//printf("brix\t%lf\n", brix);
+//printf("digestionRequirement\t%lf\n", digestionRequirement);
+//printf("fruitGrav\t%lf\n", fruitGrav);
+
+double totalRequirement=digestionRequirement;
+if(fruitGrav > 0)
+  totalRequirement -= (fruitGrav / 100.0) * digestionRequirement;
+
+printf("total nutrient requirement\t%lf\n", totalRequirement);
+printf("each nutrient addition\t%lf\n", totalRequirement/4.0);
+printf("1/3 sugar break\t%lf\n", sugarBreak);
+#+end_src
+
+#+RESULTS:
+| total nutrient requirement | 21.396773 |
+| each nutrient addition     |  5.349193 |
+| 1/3 sugar break            |  1.033333 |
+
+do an addition at 24, 48, 72 hours, and then at the 1/3rd sugar break or 1 week (whichever comes first)
+
+* yeast ref
+
+| Lalvin 71B                 | 0.75 |
+| Lalvin BA 11               | 1.25 |
+| Lalvin BM45                |  0.9 |
+| Lalvin BM4X4               | 1.25 |
+| Lalvin CLOS                |  0.9 |
+| Lalvin CY3079              | 1.25 |
+| Lalvin D21                 | 0.75 |
+| Lalvin D254                |  0.9 |
+| Lalvin D47                 | 0.75 |
+| Lalvin D80                 |  0.9 |
+| Lalvin DV10                | 0.75 |
+| Lalvin EC-1118             | 0.75 |
+| Lalvin K1V-1116            |  0.9 |
+| Lalvin QA23                | 0.75 |
+| Lalvin R2                  |  0.9 |
+| Lalvin RC212               |  0.9 |
+| Lalvin Rhone 2226          | 1.25 |
+| Red Star Cote Des Blancs   | 1.25 |
+| Red Star Montrachet        | 0.75 |
+| Red Star Pasteur Champange | 0.75 |
+| Red Star Pasteur Red       |  0.9 |
+| Red Star Premier Cuvee     |  0.9 |
+| Uvaferm 43                 | 0.75 |
+| Uvaferm BDX                |  0.9 |
+| Uvaferm SVG                |  0.9 |
+| Uvaferm VRB                |  0.9 |
+| Viti Levur 58W3            | 0.75 |
+| Other Low N Requirement    | 0.75 |
+| Other Medium N Requirement |  0.9 |
+| Other High N Requirement   | 1.25 |
+| Ale / Lager Yeast          | 0.75 |
